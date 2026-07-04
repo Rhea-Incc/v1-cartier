@@ -38,20 +38,15 @@
 
 :root {
   --radius: 0;
-  /* Deep architectural night — the palette of blue hour */
   --background: oklch(0.15 0.015 250);
   --foreground: oklch(0.94 0.008 80);
   --ink: oklch(0.08 0.012 250);
-
   --card: oklch(0.18 0.015 250);
   --card-foreground: oklch(0.94 0.008 80);
   --popover: oklch(0.15 0.015 250);
   --popover-foreground: oklch(0.94 0.008 80);
-
-  /* Cartier gold — warm, restrained */
   --gold: oklch(0.78 0.09 78);
   --gold-muted: oklch(0.62 0.06 70);
-
   --primary: oklch(0.78 0.09 78);
   --primary-foreground: oklch(0.12 0.01 250);
   --secondary: oklch(0.22 0.015 250);
@@ -62,11 +57,9 @@
   --accent-foreground: oklch(0.12 0.01 250);
   --destructive: oklch(0.55 0.2 25);
   --destructive-foreground: oklch(0.98 0 0);
-
   --border: oklch(1 0 0 / 0.08);
   --input: oklch(1 0 0 / 0.12);
   --ring: oklch(0.78 0.09 78 / 0.4);
-
   --font-display: "Cormorant Garamond", "Times New Roman", serif;
   --font-serif: "Cormorant Garamond", "Times New Roman", serif;
   --font-sans: "Inter Tight", -apple-system, system-ui, sans-serif;
@@ -141,7 +134,6 @@
   }
 }
 
-/* Cinematic reveal — used with IntersectionObserver */
 @utility reveal {
   opacity: 0;
   transform: translateY(28px);
@@ -151,6 +143,7 @@
     transform 1600ms cubic-bezier(0.19, 1, 0.22, 1),
     filter 1600ms cubic-bezier(0.19, 1, 0.22, 1);
 }
+
 @utility reveal-in {
   opacity: 1;
   transform: translateY(0);
@@ -158,8 +151,7 @@
 }
 
 @utility vignette {
-  background:
-    radial-gradient(ellipse at center, transparent 40%, oklch(0.08 0.01 250 / 0.75) 100%);
+  background: radial-gradient(ellipse at center, transparent 40%, oklch(0.08 0.01 250 / 0.75) 100%);
 }
 
 @utility scrim-bottom {
@@ -173,14 +165,30 @@
 }
 
 @utility scrim-top {
-  background: linear-gradient(
-    to top,
-    transparent 40%,
-    oklch(0.1 0.012 250 / 0.7) 100%
-  );
+  background: linear-gradient(to top, transparent 40%, oklch(0.1 0.012 250 / 0.7) 100%);
 }
 
-/* Soft ambient cursor */
+@utility scene-panel {
+  border: 1px solid color-mix(in oklab, var(--gold) 14%, transparent);
+  background: linear-gradient(
+    180deg,
+    oklch(0.15 0.015 250 / 0.18) 0%,
+    oklch(0.1 0.012 250 / 0.5) 100%
+  );
+  backdrop-filter: blur(14px);
+}
+
+@utility chapter-line {
+  width: 2rem;
+  height: 1px;
+  background: color-mix(in oklab, var(--foreground) 25%, transparent);
+}
+
+@utility chapter-line-active {
+  background: color-mix(in oklab, var(--gold) 90%, transparent);
+  box-shadow: 0 0 18px color-mix(in oklab, var(--gold) 55%, transparent);
+}
+
 @utility ambient-cursor {
   pointer-events: none;
   position: fixed;
@@ -188,13 +196,11 @@
   width: 24px;
   height: 24px;
   border-radius: 9999px;
-  background: radial-gradient(
-    circle,
-    color-mix(in oklab, var(--gold) 70%, transparent) 0%,
-    transparent 70%
-  );
+  background: radial-gradient(circle, color-mix(in oklab, var(--gold) 70%, transparent) 0%, transparent 70%);
   mix-blend-mode: screen;
-  transition: width 700ms cubic-bezier(0.22, 1, 0.36, 1),
+  transition:
+    width 700ms cubic-bezier(0.22, 1, 0.36, 1),
     height 700ms cubic-bezier(0.22, 1, 0.36, 1),
     opacity 500ms ease;
 }
+
