@@ -218,8 +218,8 @@ function Nav() {
     >
       <div className="mx-auto flex max-w-[1600px] items-center justify-between px-8 md:px-14">
         <a href="#top" className="flex items-center gap-3" data-cursor>
-          <img src={logo.url} alt="" className="h-7 w-auto opacity-90" />
-          <img src={wordmark.url} alt="Cartier" className="h-3 w-auto opacity-90" />
+          <img src={MEDIA.logo} alt="" className="h-7 w-auto opacity-90" />
+          <img src={MEDIA.wordmark} alt="Cartier" className="h-3 w-auto opacity-90" />
         </a>
         <nav className="hidden gap-12 md:flex">
           {[
@@ -461,7 +461,7 @@ function Index() {
           <div className="mt-16 grid grid-cols-12 gap-6">
             <div className="reveal col-span-12 md:col-span-7">
               <Parallax
-                src={lobby.url}
+                src={MEDIA.lobby}
                 alt="Grand Cartier lobby with sculpted layered stone walls and soft circular skylight"
                 className="aspect-[16/10]"
               />
@@ -469,7 +469,7 @@ function Index() {
             <div className="col-span-12 grid gap-6 md:col-span-5">
               <div className="reveal">
                 <Parallax
-                  src={interiorConcept.url}
+                  src={MEDIA.interiorConcept}
                   alt="Fluid interior architecture with soft reflected light and sculptural forms"
                   className="aspect-[4/5]"
                 />
@@ -698,7 +698,7 @@ function Index() {
 
       <footer className="border-t border-white/10">
         <div className="mx-auto flex max-w-[1600px] flex-col items-center gap-8 px-8 py-16 md:flex-row md:justify-between md:px-14">
-          <img src={wordmark.url} alt="Cartier" className="h-3 opacity-70" />
+          <img src={MEDIA.wordmark} alt="Cartier" className="h-3 opacity-70" />
           <p className="eyebrow text-foreground/50">Phuket · Phase 02 · Belonging</p>
           <p className="text-xs text-foreground/40">© Cartier Residences</p>
         </div>
@@ -755,21 +755,21 @@ const collectionCards = [
   {
     edition: "Edition N° 04",
     title: "The Arrival Piece",
-    image: entrance.url,
+    image: MEDIA.entrance,
     alt: "Cartier arrival facade illuminated at blue hour",
     copy: "A residence introduced through ceremony, proportion, and the first encounter with light.",
   },
   {
     edition: "Edition N° 12",
     title: "The Vertical Room",
-    image: towerLowAngle.url,
+    image: MEDIA.towerLowAngle,
     alt: "Tower residence rising with rounded balconies and warm internal lighting",
     copy: "A sculptural ascent where every floor turns toward a different relation with the horizon.",
   },
   {
     edition: "Edition N° 19",
     title: "The Coastline Belvedere",
-    image: towerFront.url,
+    image: MEDIA.towerFront,
     alt: "Front view of the Cartier tower at blue hour",
     copy: "The final edition, composed for long evening light and uninterrupted silence.",
   },
