@@ -600,8 +600,8 @@ function Index() {
             </div>
             <div className="col-span-12 md:col-span-6 md:col-start-7">
               <p className="max-w-xl text-sm leading-relaxed text-foreground/68">
-                The journey continues from residence to garden, from water to architecture,
-                from architecture to coastline — without ever feeling like a page transition.
+                Beyond the terrace, a path of stepping stones. Beyond the stones, water.
+                Beyond the water, the coast — where the estate stops naming itself and simply belongs.
               </p>
             </div>
           </div>
@@ -609,14 +609,14 @@ function Index() {
           <div className="grid grid-cols-12 gap-6">
             <div className="reveal col-span-12 md:col-span-7">
               <Parallax
-                src={estateAerial2.url}
+                src={MEDIA.estateAerial2}
                 alt="Aerial view of the Cartier estate woven through gardens and water bodies"
                 className="aspect-[16/10]"
               />
             </div>
             <div className="reveal col-span-12 md:col-span-5">
               <Parallax
-                src={balcony.url}
+                src={MEDIA.balcony}
                 alt="Balcony outlook over the estate, pools, and distant coastline at sunset"
                 className="aspect-[4/5]"
               />
