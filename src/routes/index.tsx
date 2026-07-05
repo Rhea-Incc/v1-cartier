@@ -564,14 +564,14 @@ function Index() {
           <div className="grid grid-cols-12 gap-6">
             <div className="reveal col-span-12 md:col-span-6">
               <Parallax
-                src={poolDusk.url}
+                src={MEDIA.poolDusk}
                 alt="Water garden terraces glowing softly at dusk"
                 className="aspect-[4/3]"
               />
             </div>
             <div className="reveal col-span-12 md:col-span-6">
               <Parallax
-                src={sculptedFacade.url}
+                src={MEDIA.sculptedFacade}
                 alt="Sculpted facade with rounded terraces and soft internal glow"
                 className="aspect-[4/3]"
               />
