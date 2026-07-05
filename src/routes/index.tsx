@@ -385,9 +385,8 @@ function Index() {
             </div>
             <div className="col-span-12 md:col-span-6 md:col-start-7">
               <p className="max-w-xl text-sm leading-relaxed text-foreground/68">
-                Each residence is introduced as a singular composition — defined by light,
-                orientation, and its private relationship with the landscape. Never a unit.
-                Never inventory. Always an edition.
+                Nineteen residences. Each with its own hour of light, its own line of horizon,
+                its own quiet corner of the garden. None resemble another.
               </p>
             </div>
           </div>
