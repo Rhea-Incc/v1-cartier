@@ -535,8 +535,8 @@ function Index() {
             </div>
             <div className="col-span-12 md:col-span-7 md:col-start-6">
               <p className="max-w-2xl text-sm leading-relaxed text-foreground/68">
-                Luxury is revealed through edge conditions, reflections, joinery, shadow depth,
-                and the way materials receive light. Not through declaration.
+                A bronze door handle warmed by the hand. Stone that holds yesterday's sun.
+                A shadow that arrives at four o'clock and stays for the length of a conversation.
               </p>
             </div>
           </div>
