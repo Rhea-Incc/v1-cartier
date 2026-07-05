@@ -358,8 +358,8 @@ function Index() {
             </h1>
             <div className="mt-10 flex flex-col gap-8 md:flex-row md:items-end md:justify-between">
               <p className="max-w-md text-base font-light leading-relaxed text-foreground/75">
-                The visitor no longer stands outside Cartier. They begin to imagine a life
-                already unfolding within it.
+                The sea is quieter from this side of the glass. A key rests on the console.
+                Somewhere upstairs, a window has been left open for the evening.
               </p>
               <div className="flex items-center gap-10">
                 <span className="eyebrow text-foreground/60">Enter Phase 02</span>
