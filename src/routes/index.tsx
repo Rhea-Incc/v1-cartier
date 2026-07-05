@@ -18,11 +18,36 @@ import lobby from "@/assets/lobby.jpg.asset.json";
 import interiorConcept from "@/assets/interior-concept.jpg.asset.json";
 import sculptedFacade from "@/assets/sculpted-facade.jpg.asset.json";
 
+// Media served from Lovable's CDN. Prefixing with an absolute origin makes
+// every asset resolve identically from Vercel, Railway, or any other host —
+// the /__l5e/assets-v1/* path is only routable on lovable.app domains.
+const MEDIA_ORIGIN = "https://v1-cartier.lovable.app";
+const media = (u: string) => (/^https?:\/\//i.test(u) ? u : `${MEDIA_ORIGIN}${u}`);
+
+const MEDIA = {
+  vid01: media(vid01.url),
+  vid3: media(vid3.url),
+  aerial: media(aerial.url),
+  towerContext: media(towerContext.url),
+  towerFront: media(towerFront.url),
+  balcony: media(balcony.url),
+  poolDusk: media(poolDusk.url),
+  poolNight: media(poolNight.url),
+  wordmark: media(wordmark.url),
+  logo: media(logo.url),
+  entrance: media(entrance.url),
+  towerLowAngle: media(towerLowAngle.url),
+  estateAerial2: media(estateAerial2.url),
+  lobby: media(lobby.url),
+  interiorConcept: media(interiorConcept.url),
+  sculptedFacade: media(sculptedFacade.url),
+};
+
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { property: "og:image", content: towerFront.url },
-      { name: "twitter:image", content: towerFront.url },
+      { property: "og:image", content: MEDIA.towerFront },
+      { name: "twitter:image", content: MEDIA.towerFront },
     ],
   }),
   component: Index,
@@ -50,23 +75,37 @@ function useReveal() {
 function useActiveChapter(ids: string[]) {
   const [active, setActive] = useState(ids[0] ?? "");
   useEffect(() => {
-    const sections = ids
-      .map((id) => document.getElementById(id))
-      .filter((el): el is HTMLElement => Boolean(el));
+    const compute = () => {
+      const mid = window.innerHeight * 0.4;
+      let best = { id: active, dist: Number.POSITIVE_INFINITY };
+      for (const id of ids) {
+        const el = document.getElementById(id);
+        if (!el) continue;
+        const r = el.getBoundingClientRect();
+        // section considered "active" when its centre is nearest the upper third
+        const centre = r.top + r.height / 2;
+        const dist = Math.abs(centre - mid);
+        if (r.bottom > 80 && r.top < window.innerHeight && dist < best.dist) {
+          best = { id, dist };
+        }
+      }
+      if (best.id && best.id !== active) setActive(best.id);
+    };
 
-    const io = new IntersectionObserver(
-      (entries) => {
-        const visible = entries
-          .filter((entry) => entry.isIntersecting)
-          .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
-        if (visible?.target?.id) setActive(visible.target.id);
-      },
-      { threshold: [0.25, 0.45, 0.65], rootMargin: "-20% 0px -35% 0px" },
-    );
-
-    sections.forEach((section) => io.observe(section));
-    return () => io.disconnect();
-  }, [ids]);
+    let raf = 0;
+    const onScroll = () => {
+      cancelAnimationFrame(raf);
+      raf = requestAnimationFrame(compute);
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll);
+    compute();
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
+      cancelAnimationFrame(raf);
+    };
+  }, [ids, active]);
   return active;
 }
 
@@ -179,8 +218,8 @@ function Nav() {
     >
       <div className="mx-auto flex max-w-[1600px] items-center justify-between px-8 md:px-14">
         <a href="#top" className="flex items-center gap-3" data-cursor>
-          <img src={logo.url} alt="" className="h-7 w-auto opacity-90" />
-          <img src={wordmark.url} alt="Cartier" className="h-3 w-auto opacity-90" />
+          <img src={MEDIA.logo} alt="" className="h-7 w-auto opacity-90" />
+          <img src={MEDIA.wordmark} alt="Cartier" className="h-3 w-auto opacity-90" />
         </a>
         <nav className="hidden gap-12 md:flex">
           {[
@@ -208,28 +247,48 @@ function Nav() {
 }
 
 function SceneChapters({ activeId }: { activeId: string }) {
+  const activeIndex = Math.max(
+    0,
+    chapters.findIndex((c) => c.id === activeId),
+  );
+  const current = chapters[activeIndex] ?? chapters[0];
+
+  const jump = (id: string) => (e: React.MouseEvent) => {
+    e.preventDefault();
+    const el = document.getElementById(id);
+    if (!el) return;
+    const y = el.getBoundingClientRect().top + window.scrollY - 24;
+    window.scrollTo({ top: y, behavior: "smooth" });
+  };
+
   return (
-    <aside className="fixed right-5 top-1/2 z-40 hidden -translate-y-1/2 xl:block">
-      <div className="scene-panel flex flex-col gap-4 px-5 py-6">
-        <p className="eyebrow text-[10px] text-foreground/45">Phase 02 — Belonging</p>
-        <div className="flex flex-col gap-3">
+    <aside className="fixed right-6 top-1/2 z-40 hidden -translate-y-1/2 xl:block">
+      <div className="flex flex-col items-end gap-4">
+        <p className="eyebrow text-[10px] text-foreground/40">
+          {String(activeIndex + 1).padStart(2, "0")} — {current?.label}
+        </p>
+        <div className="flex flex-col items-end gap-3">
           {chapters.map((chapter) => {
             const active = activeId === chapter.id;
             return (
               <a
                 key={chapter.id}
                 href={`#${chapter.id}`}
+                onClick={jump(chapter.id)}
                 data-cursor
-                className="group flex items-center gap-3"
+                aria-label={chapter.label}
+                className="group flex items-center gap-3 py-1"
               >
-                <span className={`chapter-line ${active ? "chapter-line-active" : ""}`} />
                 <span
-                  className={`text-[11px] uppercase tracking-[0.24em] transition-colors duration-500 ${
-                    active ? "text-[color:var(--gold)]" : "text-foreground/38 group-hover:text-foreground/72"
+                  className={`text-[10px] uppercase tracking-[0.28em] transition-all duration-700 ${
+                    active
+                      ? "text-[color:var(--gold)] opacity-100"
+                      : "opacity-0 -translate-x-1 text-foreground/60 group-hover:opacity-90 group-hover:translate-x-0"
                   }`}
                 >
                   {chapter.label}
                 </span>
+                <span className={`chapter-line ${active ? "chapter-line-active" : ""}`} />
               </a>
             );
           })}
@@ -249,12 +308,12 @@ function PhaseLead() {
         </div>
         <div className="reveal col-span-12 md:col-span-7 md:col-start-5">
           <p className="font-display text-3xl leading-[1.3] text-foreground/88 md:text-[2.65rem]">
-            Admiration gives way to ownership the moment architecture stops being the
-            object of attention and quietly becomes the setting of life.
+            The door has already opened. The lamps are lit at their lowest setting.
+            Someone — perhaps you — has been living here for years.
           </p>
           <p className="mt-8 max-w-2xl text-sm leading-relaxed text-foreground/66">
-            These chapters do not explain Cartier. They lead the visitor through a gradual
-            emotional shift — from observing a place to unconsciously inhabiting it.
+            Coffee cools on the stone counter. A linen jacket rests on the arm of a chair.
+            Outside, the pool holds the last of the afternoon light.
           </p>
         </div>
       </div>
@@ -275,7 +334,7 @@ function Index() {
 
       <section className="relative h-[100svh] w-full overflow-hidden">
         <video
-          src={vid3.url}
+          src={MEDIA.vid3}
           autoPlay
           muted
           loop
@@ -299,8 +358,8 @@ function Index() {
             </h1>
             <div className="mt-10 flex flex-col gap-8 md:flex-row md:items-end md:justify-between">
               <p className="max-w-md text-base font-light leading-relaxed text-foreground/75">
-                The visitor no longer stands outside Cartier. They begin to imagine a life
-                already unfolding within it.
+                The sea is quieter from this side of the glass. A key rests on the console.
+                Somewhere upstairs, a window has been left open for the evening.
               </p>
               <div className="flex items-center gap-10">
                 <span className="eyebrow text-foreground/60">Enter Phase 02</span>
@@ -326,9 +385,8 @@ function Index() {
             </div>
             <div className="col-span-12 md:col-span-6 md:col-start-7">
               <p className="max-w-xl text-sm leading-relaxed text-foreground/68">
-                Each residence is introduced as a singular composition — defined by light,
-                orientation, and its private relationship with the landscape. Never a unit.
-                Never inventory. Always an edition.
+                Nineteen residences. Each with its own hour of light, its own line of horizon,
+                its own quiet corner of the garden. None resemble another.
               </p>
             </div>
           </div>
@@ -364,7 +422,7 @@ function Index() {
               <h2 className="font-display mt-6 text-5xl leading-none md:text-6xl">A numbered gallery.</h2>
             </div>
             <p className="hidden max-w-sm text-sm leading-relaxed text-foreground/58 md:block">
-              Selection becomes a cinematic entry point rather than a transaction.
+              Choose the room you would wake in. The rest arranges itself around that decision.
             </p>
           </div>
 
@@ -403,7 +461,7 @@ function Index() {
           <div className="mt-16 grid grid-cols-12 gap-6">
             <div className="reveal col-span-12 md:col-span-7">
               <Parallax
-                src={lobby.url}
+                src={MEDIA.lobby}
                 alt="Grand Cartier lobby with sculpted layered stone walls and soft circular skylight"
                 className="aspect-[16/10]"
               />
@@ -411,7 +469,7 @@ function Index() {
             <div className="col-span-12 grid gap-6 md:col-span-5">
               <div className="reveal">
                 <Parallax
-                  src={interiorConcept.url}
+                  src={MEDIA.interiorConcept}
                   alt="Fluid interior architecture with soft reflected light and sculptural forms"
                   className="aspect-[4/5]"
                 />
@@ -445,14 +503,14 @@ function Index() {
           <div className="grid grid-cols-12 gap-6">
             <div className="reveal col-span-12 md:col-span-5">
               <Parallax
-                src={entrance.url}
+                src={MEDIA.entrance}
                 alt="Cartier entrance glowing softly at blue hour between palms and reflected light"
                 className="aspect-[4/5]"
               />
             </div>
             <div className="reveal col-span-12 md:col-span-7">
               <Parallax
-                src={poolNight.url}
+                src={MEDIA.poolNight}
                 alt="Quiet pool terrace at night suggesting books, water, and warm evening rituals"
                 className="aspect-[16/10]"
               />
@@ -477,8 +535,8 @@ function Index() {
             </div>
             <div className="col-span-12 md:col-span-7 md:col-start-6">
               <p className="max-w-2xl text-sm leading-relaxed text-foreground/68">
-                Luxury is revealed through edge conditions, reflections, joinery, shadow depth,
-                and the way materials receive light. Not through declaration.
+                A bronze door handle warmed by the hand. Stone that holds yesterday's sun.
+                A shadow that arrives at four o'clock and stays for the length of a conversation.
               </p>
             </div>
           </div>
@@ -506,14 +564,14 @@ function Index() {
           <div className="grid grid-cols-12 gap-6">
             <div className="reveal col-span-12 md:col-span-6">
               <Parallax
-                src={poolDusk.url}
+                src={MEDIA.poolDusk}
                 alt="Water garden terraces glowing softly at dusk"
                 className="aspect-[4/3]"
               />
             </div>
             <div className="reveal col-span-12 md:col-span-6">
               <Parallax
-                src={sculptedFacade.url}
+                src={MEDIA.sculptedFacade}
                 alt="Sculpted facade with rounded terraces and soft internal glow"
                 className="aspect-[4/3]"
               />
@@ -542,8 +600,8 @@ function Index() {
             </div>
             <div className="col-span-12 md:col-span-6 md:col-start-7">
               <p className="max-w-xl text-sm leading-relaxed text-foreground/68">
-                The journey continues from residence to garden, from water to architecture,
-                from architecture to coastline — without ever feeling like a page transition.
+                Beyond the terrace, a path of stepping stones. Beyond the stones, water.
+                Beyond the water, the coast — where the estate stops naming itself and simply belongs.
               </p>
             </div>
           </div>
@@ -551,14 +609,14 @@ function Index() {
           <div className="grid grid-cols-12 gap-6">
             <div className="reveal col-span-12 md:col-span-7">
               <Parallax
-                src={estateAerial2.url}
+                src={MEDIA.estateAerial2}
                 alt="Aerial view of the Cartier estate woven through gardens and water bodies"
                 className="aspect-[16/10]"
               />
             </div>
             <div className="reveal col-span-12 md:col-span-5">
               <Parallax
-                src={balcony.url}
+                src={MEDIA.balcony}
                 alt="Balcony outlook over the estate, pools, and distant coastline at sunset"
                 className="aspect-[4/5]"
               />
@@ -579,7 +637,7 @@ function Index() {
           <div className="grid grid-cols-12 gap-6">
             <div className="reveal col-span-12 md:col-span-7">
               <Parallax
-                src={towerLowAngle.url}
+                src={MEDIA.towerLowAngle}
                 alt="Low angle view of the illuminated Cartier tower at dusk"
                 className="aspect-[4/5]"
               />
@@ -602,7 +660,7 @@ function Index() {
       <section id="reservation" className="relative overflow-hidden border-t border-white/10">
         <div className="absolute inset-0">
           <img
-            src={aerial.url}
+            src={MEDIA.aerial}
             alt="Night aerial of the Cartier estate behind the reservation form"
             className="h-full w-full object-cover"
           />
@@ -618,7 +676,7 @@ function Index() {
               completed quietly.
             </h2>
             <p className="mt-8 max-w-sm text-sm leading-relaxed text-foreground/72">
-              Correspondence is handled discreetly. The interface recedes. The relationship begins.
+              Leave your name. A single letter will follow, hand-addressed, within seven days.
             </p>
           </div>
 
@@ -640,7 +698,7 @@ function Index() {
 
       <footer className="border-t border-white/10">
         <div className="mx-auto flex max-w-[1600px] flex-col items-center gap-8 px-8 py-16 md:flex-row md:justify-between md:px-14">
-          <img src={wordmark.url} alt="Cartier" className="h-3 opacity-70" />
+          <img src={MEDIA.wordmark} alt="Cartier" className="h-3 opacity-70" />
           <p className="eyebrow text-foreground/50">Phuket · Phase 02 · Belonging</p>
           <p className="text-xs text-foreground/40">© Cartier Residences</p>
         </div>
@@ -697,21 +755,21 @@ const collectionCards = [
   {
     edition: "Edition N° 04",
     title: "The Arrival Piece",
-    image: entrance.url,
+    image: MEDIA.entrance,
     alt: "Cartier arrival facade illuminated at blue hour",
     copy: "A residence introduced through ceremony, proportion, and the first encounter with light.",
   },
   {
     edition: "Edition N° 12",
     title: "The Vertical Room",
-    image: towerLowAngle.url,
+    image: MEDIA.towerLowAngle,
     alt: "Tower residence rising with rounded balconies and warm internal lighting",
     copy: "A sculptural ascent where every floor turns toward a different relation with the horizon.",
   },
   {
     edition: "Edition N° 19",
     title: "The Coastline Belvedere",
-    image: towerFront.url,
+    image: MEDIA.towerFront,
     alt: "Front view of the Cartier tower at blue hour",
     copy: "The final edition, composed for long evening light and uninterrupted silence.",
   },
