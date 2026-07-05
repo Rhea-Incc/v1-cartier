@@ -75,23 +75,37 @@ function useReveal() {
 function useActiveChapter(ids: string[]) {
   const [active, setActive] = useState(ids[0] ?? "");
   useEffect(() => {
-    const sections = ids
-      .map((id) => document.getElementById(id))
-      .filter((el): el is HTMLElement => Boolean(el));
+    const compute = () => {
+      const mid = window.innerHeight * 0.4;
+      let best = { id: active, dist: Number.POSITIVE_INFINITY };
+      for (const id of ids) {
+        const el = document.getElementById(id);
+        if (!el) continue;
+        const r = el.getBoundingClientRect();
+        // section considered "active" when its centre is nearest the upper third
+        const centre = r.top + r.height / 2;
+        const dist = Math.abs(centre - mid);
+        if (r.bottom > 80 && r.top < window.innerHeight && dist < best.dist) {
+          best = { id, dist };
+        }
+      }
+      if (best.id && best.id !== active) setActive(best.id);
+    };
 
-    const io = new IntersectionObserver(
-      (entries) => {
-        const visible = entries
-          .filter((entry) => entry.isIntersecting)
-          .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
-        if (visible?.target?.id) setActive(visible.target.id);
-      },
-      { threshold: [0.25, 0.45, 0.65], rootMargin: "-20% 0px -35% 0px" },
-    );
-
-    sections.forEach((section) => io.observe(section));
-    return () => io.disconnect();
-  }, [ids]);
+    let raf = 0;
+    const onScroll = () => {
+      cancelAnimationFrame(raf);
+      raf = requestAnimationFrame(compute);
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll);
+    compute();
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
+      cancelAnimationFrame(raf);
+    };
+  }, [ids, active]);
   return active;
 }
 
