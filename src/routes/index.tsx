@@ -247,28 +247,48 @@ function Nav() {
 }
 
 function SceneChapters({ activeId }: { activeId: string }) {
+  const activeIndex = Math.max(
+    0,
+    chapters.findIndex((c) => c.id === activeId),
+  );
+  const current = chapters[activeIndex] ?? chapters[0];
+
+  const jump = (id: string) => (e: React.MouseEvent) => {
+    e.preventDefault();
+    const el = document.getElementById(id);
+    if (!el) return;
+    const y = el.getBoundingClientRect().top + window.scrollY - 24;
+    window.scrollTo({ top: y, behavior: "smooth" });
+  };
+
   return (
-    <aside className="fixed right-5 top-1/2 z-40 hidden -translate-y-1/2 xl:block">
-      <div className="scene-panel flex flex-col gap-4 px-5 py-6">
-        <p className="eyebrow text-[10px] text-foreground/45">Phase 02 — Belonging</p>
-        <div className="flex flex-col gap-3">
+    <aside className="fixed right-6 top-1/2 z-40 hidden -translate-y-1/2 xl:block">
+      <div className="flex flex-col items-end gap-4">
+        <p className="eyebrow text-[10px] text-foreground/40">
+          {String(activeIndex + 1).padStart(2, "0")} — {current?.label}
+        </p>
+        <div className="flex flex-col items-end gap-3">
           {chapters.map((chapter) => {
             const active = activeId === chapter.id;
             return (
               <a
                 key={chapter.id}
                 href={`#${chapter.id}`}
+                onClick={jump(chapter.id)}
                 data-cursor
-                className="group flex items-center gap-3"
+                aria-label={chapter.label}
+                className="group flex items-center gap-3 py-1"
               >
-                <span className={`chapter-line ${active ? "chapter-line-active" : ""}`} />
                 <span
-                  className={`text-[11px] uppercase tracking-[0.24em] transition-colors duration-500 ${
-                    active ? "text-[color:var(--gold)]" : "text-foreground/38 group-hover:text-foreground/72"
+                  className={`text-[10px] uppercase tracking-[0.28em] transition-all duration-700 ${
+                    active
+                      ? "text-[color:var(--gold)] opacity-100"
+                      : "opacity-0 -translate-x-1 text-foreground/60 group-hover:opacity-90 group-hover:translate-x-0"
                   }`}
                 >
                   {chapter.label}
                 </span>
+                <span className={`chapter-line ${active ? "chapter-line-active" : ""}`} />
               </a>
             );
           })}
