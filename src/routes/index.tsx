@@ -334,7 +334,7 @@ function Index() {
 
       <section className="relative h-[100svh] w-full overflow-hidden">
         <video
-          src={MEDIA.vid01}
+          src={MEDIA.vid3}
           autoPlay
           muted
           loop
