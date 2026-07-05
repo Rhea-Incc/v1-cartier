@@ -18,11 +18,36 @@ import lobby from "@/assets/lobby.jpg.asset.json";
 import interiorConcept from "@/assets/interior-concept.jpg.asset.json";
 import sculptedFacade from "@/assets/sculpted-facade.jpg.asset.json";
 
+// Media served from Lovable's CDN. Prefixing with an absolute origin makes
+// every asset resolve identically from Vercel, Railway, or any other host —
+// the /__l5e/assets-v1/* path is only routable on lovable.app domains.
+const MEDIA_ORIGIN = "https://v1-cartier.lovable.app";
+const media = (u: string) => (/^https?:\/\//i.test(u) ? u : `${MEDIA_ORIGIN}${u}`);
+
+const MEDIA = {
+  vid01: media(vid01.url),
+  vid3: media(vid3.url),
+  aerial: media(aerial.url),
+  towerContext: media(towerContext.url),
+  towerFront: media(towerFront.url),
+  balcony: media(balcony.url),
+  poolDusk: media(poolDusk.url),
+  poolNight: media(poolNight.url),
+  wordmark: media(wordmark.url),
+  logo: media(logo.url),
+  entrance: media(entrance.url),
+  towerLowAngle: media(towerLowAngle.url),
+  estateAerial2: media(estateAerial2.url),
+  lobby: media(lobby.url),
+  interiorConcept: media(interiorConcept.url),
+  sculptedFacade: media(sculptedFacade.url),
+};
+
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { property: "og:image", content: towerFront.url },
-      { name: "twitter:image", content: towerFront.url },
+      { property: "og:image", content: MEDIA.towerFront },
+      { name: "twitter:image", content: MEDIA.towerFront },
     ],
   }),
   component: Index,
