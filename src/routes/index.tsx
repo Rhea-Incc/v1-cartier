@@ -660,7 +660,7 @@ function Index() {
       <section id="reservation" className="relative overflow-hidden border-t border-white/10">
         <div className="absolute inset-0">
           <img
-            src={aerial.url}
+            src={MEDIA.aerial}
             alt="Night aerial of the Cartier estate behind the reservation form"
             className="h-full w-full object-cover"
           />
@@ -676,7 +676,7 @@ function Index() {
               completed quietly.
             </h2>
             <p className="mt-8 max-w-sm text-sm leading-relaxed text-foreground/72">
-              Correspondence is handled discreetly. The interface recedes. The relationship begins.
+              Leave your name. A single letter will follow, hand-addressed, within seven days.
             </p>
           </div>
 
