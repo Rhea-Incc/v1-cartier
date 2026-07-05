@@ -422,7 +422,7 @@ function Index() {
               <h2 className="font-display mt-6 text-5xl leading-none md:text-6xl">A numbered gallery.</h2>
             </div>
             <p className="hidden max-w-sm text-sm leading-relaxed text-foreground/58 md:block">
-              Selection becomes a cinematic entry point rather than a transaction.
+              Choose the room you would wake in. The rest arranges itself around that decision.
             </p>
           </div>
 
