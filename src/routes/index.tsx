@@ -308,12 +308,12 @@ function PhaseLead() {
         </div>
         <div className="reveal col-span-12 md:col-span-7 md:col-start-5">
           <p className="font-display text-3xl leading-[1.3] text-foreground/88 md:text-[2.65rem]">
-            Admiration gives way to ownership the moment architecture stops being the
-            object of attention and quietly becomes the setting of life.
+            The door has already opened. The lamps are lit at their lowest setting.
+            Someone — perhaps you — has been living here for years.
           </p>
           <p className="mt-8 max-w-2xl text-sm leading-relaxed text-foreground/66">
-            These chapters do not explain Cartier. They lead the visitor through a gradual
-            emotional shift — from observing a place to unconsciously inhabiting it.
+            Coffee cools on the stone counter. A linen jacket rests on the arm of a chair.
+            Outside, the pool holds the last of the afternoon light.
           </p>
         </div>
       </div>
