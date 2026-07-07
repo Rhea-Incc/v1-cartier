@@ -234,7 +234,7 @@ export const Route = createFileRoute("/materials/$slug")({
 });
 
 function MaterialPage() {
-  const { material } = Route.useLoaderData();
+  const { material } = Route.useLoaderData() as { material: Material };
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "instant" as ScrollBehavior });
