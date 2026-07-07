@@ -1,8 +1,9 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useMemo, useRef, useState } from "react";
 
 import vid01 from "@/assets/vid-01.mp4.asset.json";
 import vid3 from "@/assets/vid-3.mp4.asset.json";
+import vid2 from "@/assets/vid-2.mp4.asset.json";
 import aerial from "@/assets/aerial.png.asset.json";
 import towerContext from "@/assets/tower-context.png.asset.json";
 import towerFront from "@/assets/tower-front.png.asset.json";
@@ -17,6 +18,17 @@ import estateAerial2 from "@/assets/estate-aerial-2.png.asset.json";
 import lobby from "@/assets/lobby.jpg.asset.json";
 import interiorConcept from "@/assets/interior-concept.jpg.asset.json";
 import sculptedFacade from "@/assets/sculpted-facade.jpg.asset.json";
+import materialStone from "@/assets/material-stone.png.asset.json";
+import materialTimber from "@/assets/material-timber.png.asset.json";
+import materialGlass from "@/assets/material-glass.png.asset.json";
+import materialBronze from "@/assets/material-bronze.png.asset.json";
+import materialWater from "@/assets/material-water.png.asset.json";
+import poolTwilight from "@/assets/pool-twilight.png.asset.json";
+import poolSunset from "@/assets/pool-sunset.png.asset.json";
+import towerNight from "@/assets/tower-night.png.asset.json";
+import estateBalcony from "@/assets/estate-balcony.png.asset.json";
+
+import { ContourField } from "@/components/ContourField";
 
 // Media served from Lovable's CDN. Prefixing with an absolute origin makes
 // every asset resolve identically from Vercel, Railway, or any other host —
@@ -27,6 +39,7 @@ const media = (u: string) => (/^https?:\/\//i.test(u) ? u : `${MEDIA_ORIGIN}${u}
 const MEDIA = {
   vid01: media(vid01.url),
   vid3: media(vid3.url),
+  vid2: media(vid2.url),
   aerial: media(aerial.url),
   towerContext: media(towerContext.url),
   towerFront: media(towerFront.url),
@@ -41,6 +54,15 @@ const MEDIA = {
   lobby: media(lobby.url),
   interiorConcept: media(interiorConcept.url),
   sculptedFacade: media(sculptedFacade.url),
+  matStone: media(materialStone.url),
+  matTimber: media(materialTimber.url),
+  matGlass: media(materialGlass.url),
+  matBronze: media(materialBronze.url),
+  matWater: media(materialWater.url),
+  poolTwilight: media(poolTwilight.url),
+  poolSunset: media(poolSunset.url),
+  towerNight: media(towerNight.url),
+  estateBalcony: media(estateBalcony.url),
 };
 
 export const Route = createFileRoute("/")({
@@ -52,6 +74,7 @@ export const Route = createFileRoute("/")({
   }),
   component: Index,
 });
+
 
 function useReveal() {
   useEffect(() => {
