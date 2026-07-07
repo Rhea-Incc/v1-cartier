@@ -231,3 +231,75 @@
     opacity 500ms ease;
 }
 
+
+@utility contour-field {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+  opacity: 0.32;
+  mix-blend-mode: screen;
+  mask-image: radial-gradient(ellipse at center, black 30%, transparent 78%);
+  -webkit-mask-image: radial-gradient(ellipse at center, black 30%, transparent 78%);
+}
+.contour-field svg {
+  position: absolute;
+  inset: -12%;
+  width: 124%;
+  height: 124%;
+  color: color-mix(in oklab, var(--gold) 70%, transparent);
+  animation: contour-drift 68s cubic-bezier(0.45, 0, 0.55, 1) infinite alternate;
+  will-change: transform;
+}
+.contour-field.contour-dense {
+  opacity: 0.22;
+}
+.contour-field.contour-quiet {
+  opacity: 0.14;
+}
+.contour-field.contour-warm svg {
+  color: color-mix(in oklab, var(--gold) 90%, transparent);
+}
+.contour-field svg path {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 0.6;
+  vector-effect: non-scaling-stroke;
+}
+.contour-field svg path.c-breathe {
+  animation: contour-breathe 14s ease-in-out infinite alternate;
+  transform-origin: 50% 50%;
+}
+@keyframes contour-drift {
+  0%   { transform: translate3d(0%, 0%, 0) scale(1); }
+  100% { transform: translate3d(-3%, -1.8%, 0) scale(1.06); }
+}
+@keyframes contour-breathe {
+  0%   { transform: scale(1);    opacity: 0.85; }
+  100% { transform: scale(1.02); opacity: 1; }
+}
+
+@utility phase-marker {
+  border: 1px solid color-mix(in oklab, var(--gold) 22%, transparent);
+  background: linear-gradient(180deg, oklch(0.12 0.012 250 / 0.55), oklch(0.10 0.012 250 / 0.7));
+  backdrop-filter: blur(18px);
+}
+
+@utility material-tile {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  transition: transform 1400ms cubic-bezier(0.19, 1, 0.22, 1);
+}
+.material-tile:hover img {
+  transform: scale(1.06);
+}
+.material-tile img {
+  transition: transform 2400ms cubic-bezier(0.19, 1, 0.22, 1);
+}
+
+@utility phase-sheet {
+  background:
+    radial-gradient(ellipse at top, oklch(0.14 0.015 250 / 0.98), oklch(0.08 0.012 250 / 0.98) 70%);
+  backdrop-filter: blur(24px);
+}
