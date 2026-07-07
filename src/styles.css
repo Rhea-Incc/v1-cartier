@@ -197,7 +197,7 @@
 @utility scene-seam {
   position: relative;
 }
-@utility scene-seam::before {
+.scene-seam::before {
   content: "";
   position: absolute;
   inset: 0 0 auto 0;
@@ -206,7 +206,7 @@
   background: linear-gradient(to bottom, oklch(0.15 0.015 250) 0%, transparent 100%);
   z-index: 1;
 }
-@utility scene-seam::after {
+.scene-seam::after {
   content: "";
   position: absolute;
   inset: auto 0 0 0;
