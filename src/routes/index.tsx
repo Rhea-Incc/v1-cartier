@@ -1,8 +1,9 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useMemo, useRef, useState } from "react";
 
 import vid01 from "@/assets/vid-01.mp4.asset.json";
 import vid3 from "@/assets/vid-3.mp4.asset.json";
+import vid2 from "@/assets/vid-2.mp4.asset.json";
 import aerial from "@/assets/aerial.png.asset.json";
 import towerContext from "@/assets/tower-context.png.asset.json";
 import towerFront from "@/assets/tower-front.png.asset.json";
@@ -17,6 +18,17 @@ import estateAerial2 from "@/assets/estate-aerial-2.png.asset.json";
 import lobby from "@/assets/lobby.jpg.asset.json";
 import interiorConcept from "@/assets/interior-concept.jpg.asset.json";
 import sculptedFacade from "@/assets/sculpted-facade.jpg.asset.json";
+import materialStone from "@/assets/material-stone.png.asset.json";
+import materialTimber from "@/assets/material-timber.png.asset.json";
+import materialGlass from "@/assets/material-glass.png.asset.json";
+import materialBronze from "@/assets/material-bronze.png.asset.json";
+import materialWater from "@/assets/material-water.png.asset.json";
+import poolTwilight from "@/assets/pool-twilight.png.asset.json";
+import poolSunset from "@/assets/pool-sunset.png.asset.json";
+import towerNight from "@/assets/tower-night.png.asset.json";
+import estateBalcony from "@/assets/estate-balcony.png.asset.json";
+
+import { ContourField } from "@/components/ContourField";
 
 // Media served from Lovable's CDN. Prefixing with an absolute origin makes
 // every asset resolve identically from Vercel, Railway, or any other host —
@@ -27,6 +39,7 @@ const media = (u: string) => (/^https?:\/\//i.test(u) ? u : `${MEDIA_ORIGIN}${u}
 const MEDIA = {
   vid01: media(vid01.url),
   vid3: media(vid3.url),
+  vid2: media(vid2.url),
   aerial: media(aerial.url),
   towerContext: media(towerContext.url),
   towerFront: media(towerFront.url),
@@ -41,6 +54,15 @@ const MEDIA = {
   lobby: media(lobby.url),
   interiorConcept: media(interiorConcept.url),
   sculptedFacade: media(sculptedFacade.url),
+  matStone: media(materialStone.url),
+  matTimber: media(materialTimber.url),
+  matGlass: media(materialGlass.url),
+  matBronze: media(materialBronze.url),
+  matWater: media(materialWater.url),
+  poolTwilight: media(poolTwilight.url),
+  poolSunset: media(poolSunset.url),
+  towerNight: media(towerNight.url),
+  estateBalcony: media(estateBalcony.url),
 };
 
 export const Route = createFileRoute("/")({
@@ -52,6 +74,7 @@ export const Route = createFileRoute("/")({
   }),
   component: Index,
 });
+
 
 function useReveal() {
   useEffect(() => {
@@ -197,7 +220,7 @@ function Parallax({ src, alt, className = "" }: { src: string; alt: string; clas
   );
 }
 
-function Nav() {
+function Nav({ onOpenPhases }: { onOpenPhases: () => void }) {
   const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
@@ -209,42 +232,163 @@ function Nav() {
 
   return (
     <header
-      className={`fixed inset-x-0 top-0 z-50 transition-all duration-700 ${scrolled ? "py-4 backdrop-blur-md" : "py-8"}`}
+      className={`fixed inset-x-0 top-0 z-50 transition-all duration-700 ${scrolled ? "py-3 backdrop-blur-md" : "py-6 md:py-8"}`}
       style={{
         background: scrolled
-          ? "linear-gradient(to bottom, oklch(0.1 0.012 250 / 0.65), transparent)"
+          ? "linear-gradient(to bottom, oklch(0.1 0.012 250 / 0.7), transparent)"
           : "transparent",
       }}
     >
-      <div className="mx-auto flex max-w-[1600px] items-center justify-between px-8 md:px-14">
-        <a href="#top" className="flex items-center gap-3" data-cursor>
-          <img src={MEDIA.logo} alt="" className="h-7 w-auto opacity-90" />
-          <img src={MEDIA.wordmark} alt="Cartier" className="h-3 w-auto opacity-90" />
+      <div className="mx-auto grid max-w-[1600px] grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] items-center gap-4 px-5 md:px-14">
+        <a href="#top" className="flex min-w-0 items-center gap-3" data-cursor>
+          <img src={MEDIA.logo} alt="" className="h-6 w-auto shrink-0 opacity-90 md:h-7" />
+          <img src={MEDIA.wordmark} alt="Cartier" className="hidden h-3 w-auto opacity-90 sm:block" />
         </a>
-        <nav className="hidden gap-12 md:flex">
-          {[
-            ["Belonging", "#belonging"],
-            ["Collection", "#collection"],
-            ["Residence", "#residence"],
-            ["Estate", "#estate"],
-            ["Reservation", "#reservation"],
-          ].map(([label, href]) => (
-            <a
-              key={href}
-              href={href}
-              className="eyebrow text-foreground/80 transition-colors duration-500 hover:text-[color:var(--gold)]"
-            >
-              {label}
-            </a>
-          ))}
-        </nav>
-        <a href="#reservation" className="eyebrow gold-underline hidden md:inline-block">
-          Private Viewing
-        </a>
+
+        {/* PHASES — the always-present, elegant entry into the journey */}
+        <button
+          type="button"
+          onClick={onOpenPhases}
+          data-cursor
+          aria-label="Open phases"
+          className="phase-marker group flex items-center gap-3 px-4 py-2 md:px-5 md:py-2.5"
+        >
+          <span className="flex flex-col items-start">
+            <span className="text-[9px] uppercase tracking-[0.32em] text-foreground/50">
+              Phase 02
+            </span>
+            <span className="font-display text-sm leading-none text-foreground/90 md:text-base">
+              Belonging
+            </span>
+          </span>
+          <span className="h-4 w-px bg-white/15" />
+          <span className="grid grid-cols-3 gap-[3px]" aria-hidden>
+            {[0, 1, 2].map((i) => (
+              <span
+                key={i}
+                className={`h-[3px] w-2 ${i === 1 ? "bg-[color:var(--gold)]" : "bg-white/25"}`}
+              />
+            ))}
+          </span>
+        </button>
+
+        <div className="flex items-center justify-end gap-6 md:gap-10">
+          <a href="#reservation" className="eyebrow gold-underline hidden md:inline-block">
+            Private Viewing
+          </a>
+        </div>
       </div>
     </header>
   );
 }
+
+function PhasesOverlay({ open, onClose }: { open: boolean; onClose: () => void }) {
+  useEffect(() => {
+    if (!open) return;
+    const onKey = (e: KeyboardEvent) => e.key === "Escape" && onClose();
+    document.body.style.overflow = "hidden";
+    window.addEventListener("keydown", onKey);
+    return () => {
+      document.body.style.overflow = "";
+      window.removeEventListener("keydown", onKey);
+    };
+  }, [open, onClose]);
+
+  const jump = (href: string) => () => {
+    onClose();
+    setTimeout(() => {
+      const id = href.replace("#", "");
+      const el = document.getElementById(id);
+      if (!el) return;
+      window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY - 24, behavior: "smooth" });
+    }, 320);
+  };
+
+  return (
+    <div
+      className={`phase-sheet fixed inset-0 z-[90] transition-all duration-700 ${
+        open ? "pointer-events-auto opacity-100" : "pointer-events-none opacity-0"
+      }`}
+      aria-hidden={!open}
+    >
+      <ContourField variant="quiet" />
+      <div className="relative flex h-full flex-col">
+        <div className="flex items-center justify-between px-5 py-6 md:px-14 md:py-8">
+          <img src={MEDIA.wordmark} alt="Cartier" className="h-3 opacity-70" />
+          <button
+            onClick={onClose}
+            className="eyebrow gold-underline"
+            data-cursor
+            aria-label="Close phases"
+          >
+            Close —
+          </button>
+        </div>
+
+        <div className="mx-auto flex w-full max-w-[1600px] flex-1 flex-col justify-center px-5 pb-16 md:px-14">
+          <p className="eyebrow mb-8">The journey, in three movements</p>
+          <ol className="divide-y divide-white/10 border-y border-white/10">
+            {phases.map((p) => {
+              const isActive = p.current;
+              const clickable = p.anchor;
+              const inner = (
+                <div className="grid grid-cols-12 items-baseline gap-4 py-8 md:py-10">
+                  <span className="col-span-3 font-display text-2xl text-[color:var(--gold)] md:col-span-2 md:text-3xl">
+                    {p.index}
+                  </span>
+                  <div className="col-span-9 md:col-span-5">
+                    <p className="font-display text-4xl leading-[0.98] md:text-6xl">
+                      {p.label}
+                    </p>
+                    <p className="mt-3 text-xs uppercase tracking-[0.3em] text-foreground/45">
+                      {p.subtitle}
+                    </p>
+                  </div>
+                  <p className="col-span-12 max-w-md text-sm leading-relaxed text-foreground/60 md:col-span-4 md:col-start-9">
+                    {p.copy}
+                  </p>
+                  <p className="col-span-12 mt-2 text-[10px] uppercase tracking-[0.3em] text-foreground/45 md:col-span-1 md:col-start-12 md:text-right">
+                    {isActive ? "Now unfolding" : clickable ? "Enter →" : "Forthcoming"}
+                  </p>
+                </div>
+              );
+              return (
+                <li key={p.label} className={isActive ? "text-foreground" : "text-foreground/85"}>
+                  {clickable ? (
+                    <button
+                      type="button"
+                      onClick={jump(p.anchor!)}
+                      className="block w-full text-left transition-colors duration-500 hover:text-[color:var(--gold)]"
+                      data-cursor
+                    >
+                      {inner}
+                    </button>
+                  ) : (
+                    <div className="opacity-60">{inner}</div>
+                  )}
+                </li>
+              );
+            })}
+          </ol>
+
+          <div className="mt-10 grid grid-cols-2 gap-x-8 gap-y-3 md:grid-cols-5">
+            {chapters.map((c) => (
+              <button
+                key={c.id}
+                type="button"
+                onClick={jump(`#${c.id}`)}
+                className="eyebrow text-left text-foreground/60 transition-colors hover:text-[color:var(--gold)]"
+              >
+                {c.label}
+              </button>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 
 function SceneChapters({ activeId }: { activeId: string }) {
   const activeIndex = Math.max(
@@ -300,7 +444,8 @@ function SceneChapters({ activeId }: { activeId: string }) {
 
 function PhaseLead() {
   return (
-    <section id="belonging" className="relative py-28 md:py-40">
+    <section id="belonging" className="relative overflow-hidden py-28 md:py-40">
+      <ContourField variant="quiet" seed={1} />
       <div className="mx-auto grid max-w-[1600px] grid-cols-12 gap-8 px-8 md:px-14">
         <div className="reveal col-span-12 md:col-span-3">
           <p className="eyebrow">Phase 02</p>
@@ -325,12 +470,15 @@ function Index() {
   useReveal();
   const chapterIds = useMemo(() => chapters.map((chapter) => chapter.id), []);
   const activeChapter = useActiveChapter(chapterIds);
+  const [phasesOpen, setPhasesOpen] = useState(false);
 
   return (
     <main id="top" className="relative bg-background text-foreground">
       <AmbientCursor />
-      <Nav />
+      <Nav onOpenPhases={() => setPhasesOpen(true)} />
+      <PhasesOverlay open={phasesOpen} onClose={() => setPhasesOpen(false)} />
       <SceneChapters activeId={activeChapter} />
+
 
       <section className="relative h-[100svh] w-full overflow-hidden">
         <video
@@ -447,7 +595,8 @@ function Index() {
         </div>
       </section>
 
-      <section id="residence" className="relative py-24 md:py-32">
+      <section id="residence" className="relative overflow-hidden py-24 md:py-32">
+        <ContourField variant="quiet" seed={3} />
         <div className="mx-auto max-w-[1600px] px-8 md:px-14">
           <div className="reveal max-w-2xl">
             <p className="eyebrow">The Residence</p>
@@ -489,7 +638,8 @@ function Index() {
         </div>
       </section>
 
-      <section id="atmosphere" className="relative py-24 md:py-32">
+      <section id="atmosphere" className="relative overflow-hidden py-24 md:py-32">
+        <ContourField variant="quiet" seed={4} />
         <div className="mx-auto max-w-[1600px] px-8 md:px-14">
           <div className="reveal mb-14 max-w-2xl">
             <p className="eyebrow">The Atmosphere</p>
@@ -524,35 +674,124 @@ function Index() {
         </div>
       </section>
 
-      <section id="craft" className="relative py-24 md:py-32">
-        <div className="mx-auto max-w-[1600px] px-8 md:px-14">
+      {/* Material palette — immersive, one continuous field */}
+      <section id="craft" className="relative overflow-hidden py-24 md:py-40">
+        <ContourField variant="quiet" seed={2} />
+        <div className="relative mx-auto max-w-[1600px] px-5 md:px-14">
           <div className="reveal grid grid-cols-12 gap-8">
-            <div className="col-span-12 md:col-span-4">
-              <p className="eyebrow">Invisible Luxury</p>
-              <h2 className="font-display mt-6 text-5xl leading-[1.02] md:text-6xl">
-                Precision, not ornament.
+            <div className="col-span-12 md:col-span-5">
+              <p className="eyebrow">The Material Palette</p>
+              <h2 className="font-display mt-6 text-5xl leading-[1.02] md:text-7xl">
+                Five materials,
+                <br />
+                one language.
               </h2>
             </div>
-            <div className="col-span-12 md:col-span-7 md:col-start-6">
-              <p className="max-w-2xl text-sm leading-relaxed text-foreground/68">
-                A bronze door handle warmed by the hand. Stone that holds yesterday's sun.
-                A shadow that arrives at four o'clock and stays for the length of a conversation.
+            <div className="col-span-12 md:col-span-6 md:col-start-7 md:pt-10">
+              <p className="max-w-xl text-sm leading-relaxed text-foreground/68">
+                A bronze door handle warmed by the hand. Stone that holds yesterday&rsquo;s
+                sun. Timber ordered from lightest to deepest. Coloured glass that writes
+                on the floor. Water that returns the sky. Each material has a place, an
+                hour, and a reason.
               </p>
             </div>
           </div>
 
-          <div className="mt-14 grid grid-cols-2 gap-4 md:grid-cols-5 md:gap-6">
-            {materialMoments.map((moment) => (
-              <div key={moment.label} className="reveal scene-panel p-6 md:p-8">
-                <p className="font-display text-2xl text-foreground/92 md:text-3xl">{moment.label}</p>
-                <p className="mt-3 text-sm leading-relaxed text-foreground/58">{moment.copy}</p>
-              </div>
-            ))}
+          <div className="mt-16 grid grid-cols-12 gap-3 md:gap-5">
+            {materialTiles.map((m, i) => {
+              // rhythm: 7/5, 5/7, 4/4/4 — asymmetric but composed
+              const span =
+                i === 0
+                  ? "col-span-12 md:col-span-7"
+                  : i === 1
+                    ? "col-span-12 md:col-span-5"
+                    : "col-span-12 md:col-span-4";
+              return (
+                <Link
+                  key={m.slug}
+                  to="/materials/$slug"
+                  params={{ slug: m.slug }}
+                  data-cursor
+                  className={`material-tile reveal group relative block aspect-[4/5] ${span}`}
+                >
+                  <img
+                    src={m.image}
+                    alt={m.label}
+                    loading="lazy"
+                    className="absolute inset-0 h-full w-full object-cover"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-black/10" />
+                  <div className="absolute inset-x-0 top-0 flex items-center justify-between p-5 md:p-8">
+                    <p className="eyebrow text-foreground/70">{m.index}</p>
+                    <span className="eyebrow text-foreground/70 transition-colors group-hover:text-[color:var(--gold)]">
+                      Enter →
+                    </span>
+                  </div>
+                  <div className="absolute inset-x-0 bottom-0 p-5 md:p-8">
+                    <h3 className="font-display text-5xl leading-none md:text-6xl">
+                      {m.label}
+                    </h3>
+                    <p className="mt-4 max-w-md text-sm leading-relaxed text-foreground/75">
+                      {m.tagline}
+                    </p>
+                  </div>
+                </Link>
+              );
+            })}
           </div>
         </div>
       </section>
 
-      <section id="wellbeing" className="relative py-24 md:py-32">
+      {/* Gallery — the estate breathes */}
+      <section id="gallery" className="relative overflow-hidden py-24 md:py-32">
+        <ContourField variant="quiet" seed={5} />
+        <div className="relative mx-auto max-w-[1600px] px-5 md:px-14">
+          <div className="reveal mb-12 grid grid-cols-12 gap-8">
+            <div className="col-span-12 md:col-span-5">
+              <p className="eyebrow">Gallery</p>
+              <h2 className="font-display mt-6 text-5xl leading-[1.02] md:text-6xl">
+                Hours of the day.
+              </h2>
+            </div>
+            <p className="col-span-12 max-w-lg text-sm leading-relaxed text-foreground/68 md:col-span-6 md:col-start-7">
+              Twilight arrives from the sea. The tower lights, one floor at a time.
+              The pool becomes a corridor. The evening settles in.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-12 gap-3 md:gap-5">
+            <div className="reveal col-span-12 md:col-span-8">
+              <Parallax src={MEDIA.poolSunset} alt="Cartier terrace and pool at sunset" className="aspect-[16/10]" />
+            </div>
+            <div className="reveal col-span-12 md:col-span-4">
+              <Parallax src={MEDIA.estateBalcony} alt="Balcony overlooking the estate at dusk" className="aspect-[3/4]" />
+            </div>
+            <div className="reveal col-span-12 md:col-span-5">
+              <Parallax src={MEDIA.towerNight} alt="Cartier tower illuminated at night" className="aspect-[4/5]" />
+            </div>
+            <div className="reveal col-span-12 md:col-span-7">
+              <Parallax src={MEDIA.poolTwilight} alt="Pool terrace at twilight" className="aspect-[4/3]" />
+            </div>
+          </div>
+
+          {/* Second video — silent, ambient, deployable */}
+          <div className="reveal mt-10 overflow-hidden">
+            <video
+              src={MEDIA.vid2}
+              autoPlay
+              muted
+              loop
+              playsInline
+              preload="metadata"
+              className="aspect-[16/8] w-full object-cover"
+            />
+          </div>
+        </div>
+      </section>
+
+
+      <section id="wellbeing" className="relative overflow-hidden py-24 md:py-32">
+        <ContourField variant="quiet" seed={6} />
         <div className="mx-auto max-w-[1600px] px-8 md:px-14">
           <div className="reveal mb-14 max-w-2xl">
             <p className="eyebrow">Wellbeing</p>
@@ -589,7 +828,8 @@ function Index() {
         </div>
       </section>
 
-      <section id="estate" className="relative py-24 md:py-32">
+      <section id="estate" className="relative overflow-hidden py-24 md:py-32">
+        <ContourField variant="quiet" seed={7} />
         <div className="mx-auto max-w-[1600px] px-8 md:px-14">
           <div className="reveal mb-14 grid grid-cols-12 gap-8">
             <div className="col-span-12 md:col-span-4">
@@ -625,7 +865,8 @@ function Index() {
         </div>
       </section>
 
-      <section id="availability" className="relative py-24 md:py-32">
+      <section id="availability" className="relative overflow-hidden py-24 md:py-32">
+        <ContourField variant="quiet" seed={8} />
         <div className="mx-auto max-w-[1600px] px-8 md:px-14">
           <div className="reveal mb-14 max-w-2xl">
             <p className="eyebrow">Availability</p>
@@ -744,12 +985,91 @@ const chapters = [
   { id: "editions", label: "Editions" },
   { id: "residence", label: "Residence" },
   { id: "atmosphere", label: "Atmosphere" },
-  { id: "craft", label: "Invisible Luxury" },
+  { id: "craft", label: "Materials" },
+  { id: "gallery", label: "Gallery" },
   { id: "wellbeing", label: "Wellbeing" },
   { id: "estate", label: "Estate" },
   { id: "availability", label: "Availability" },
   { id: "reservation", label: "Reservation" },
 ];
+
+type Phase = {
+  index: string;
+  label: string;
+  subtitle: string;
+  copy: string;
+  current: boolean;
+  anchor: string | null;
+};
+
+const phases: Phase[] = [
+  {
+    index: "I",
+    label: "Arrival",
+    subtitle: "The first encounter",
+    copy:
+      "Recognition, proportion, and the ceremony of the threshold. The estate reveals itself long before the door.",
+    current: false,
+    anchor: "#collection",
+  },
+  {
+    index: "II",
+    label: "Belonging",
+    subtitle: "Now unfolding",
+    copy:
+      "Admiration becomes ownership without announcement. Life begins to arrange itself against the architecture.",
+    current: true,
+    anchor: "#belonging",
+  },
+  {
+    index: "III",
+    label: "Continuum",
+    subtitle: "In preparation",
+    copy:
+      "The residence at rest — how the estate ages, how it remembers its inhabitants, how it becomes a family object.",
+    current: false,
+    anchor: null,
+  },
+];
+
+const materialTiles = [
+  {
+    slug: "stone",
+    index: "Material N° 01",
+    label: "Stone",
+    tagline: "Cut from mountains that pre-date the ocean. Laid by hand, joint by joint.",
+    image: MEDIA.matStone,
+  },
+  {
+    slug: "timber",
+    index: "Material N° 02",
+    label: "Timber",
+    tagline: "Twelve species, ordered from lightest to deepest — each a private hour of the day.",
+    image: MEDIA.matTimber,
+  },
+  {
+    slug: "glass",
+    index: "Material N° 03",
+    label: "Glass",
+    tagline: "Hand-poured art glass held in a bronze lattice. Colour, written on the floor.",
+    image: MEDIA.matGlass,
+  },
+  {
+    slug: "bronze",
+    index: "Material N° 04",
+    label: "Bronze",
+    tagline: "The first material the hand meets — warmed by the palm before the door opens.",
+    image: MEDIA.matBronze,
+  },
+  {
+    slug: "water",
+    index: "Material N° 05",
+    label: "Water",
+    tagline: "The final surface — alive, reflective, the estate's mirror to itself.",
+    image: MEDIA.matWater,
+  },
+];
+
 
 const collectionCards = [
   {
@@ -784,13 +1104,6 @@ const editions = [
   { no: "N° 19", name: "The Summit Residence", orientation: "Level IX · Panoramic", area: "612 m²", qualifier: "ceremonial arrival", status: "By Invitation" },
 ];
 
-const materialMoments = [
-  { label: "Stone", copy: "Texture that receives daylight rather than merely reflecting it." },
-  { label: "Bronze", copy: "Warm detailing with a softened edge and measured glow." },
-  { label: "Glass", copy: "Reflections that shift with the visitor like moving water." },
-  { label: "Timber", copy: "Grain treated as quiet architecture, not decoration." },
-  { label: "Water", copy: "The final surface — alive, reflective, impossibly calm." },
-];
 
 const wellbeingSpaces = [
   { was: "Gym", name: "Movement Studio" },
