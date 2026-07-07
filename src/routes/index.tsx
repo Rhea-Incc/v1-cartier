@@ -469,12 +469,15 @@ function Index() {
   useReveal();
   const chapterIds = useMemo(() => chapters.map((chapter) => chapter.id), []);
   const activeChapter = useActiveChapter(chapterIds);
+  const [phasesOpen, setPhasesOpen] = useState(false);
 
   return (
     <main id="top" className="relative bg-background text-foreground">
       <AmbientCursor />
-      <Nav />
+      <Nav onOpenPhases={() => setPhasesOpen(true)} />
+      <PhasesOverlay open={phasesOpen} onClose={() => setPhasesOpen(false)} />
       <SceneChapters activeId={activeChapter} />
+
 
       <section className="relative h-[100svh] w-full overflow-hidden">
         <video
