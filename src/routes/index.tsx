@@ -444,7 +444,8 @@ function SceneChapters({ activeId }: { activeId: string }) {
 
 function PhaseLead() {
   return (
-    <section id="belonging" className="relative py-28 md:py-40">
+    <section id="belonging" className="relative overflow-hidden py-28 md:py-40">
+      <ContourField variant="quiet" seed={1} />
       <div className="mx-auto grid max-w-[1600px] grid-cols-12 gap-8 px-8 md:px-14">
         <div className="reveal col-span-12 md:col-span-3">
           <p className="eyebrow">Phase 02</p>
@@ -594,7 +595,8 @@ function Index() {
         </div>
       </section>
 
-      <section id="residence" className="relative py-24 md:py-32">
+      <section id="residence" className="relative overflow-hidden py-24 md:py-32">
+        <ContourField variant="quiet" seed={3} />
         <div className="mx-auto max-w-[1600px] px-8 md:px-14">
           <div className="reveal max-w-2xl">
             <p className="eyebrow">The Residence</p>
@@ -636,7 +638,8 @@ function Index() {
         </div>
       </section>
 
-      <section id="atmosphere" className="relative py-24 md:py-32">
+      <section id="atmosphere" className="relative overflow-hidden py-24 md:py-32">
+        <ContourField variant="quiet" seed={4} />
         <div className="mx-auto max-w-[1600px] px-8 md:px-14">
           <div className="reveal mb-14 max-w-2xl">
             <p className="eyebrow">The Atmosphere</p>
@@ -787,7 +790,8 @@ function Index() {
       </section>
 
 
-      <section id="wellbeing" className="relative py-24 md:py-32">
+      <section id="wellbeing" className="relative overflow-hidden py-24 md:py-32">
+        <ContourField variant="quiet" seed={6} />
         <div className="mx-auto max-w-[1600px] px-8 md:px-14">
           <div className="reveal mb-14 max-w-2xl">
             <p className="eyebrow">Wellbeing</p>
@@ -824,7 +828,8 @@ function Index() {
         </div>
       </section>
 
-      <section id="estate" className="relative py-24 md:py-32">
+      <section id="estate" className="relative overflow-hidden py-24 md:py-32">
+        <ContourField variant="quiet" seed={7} />
         <div className="mx-auto max-w-[1600px] px-8 md:px-14">
           <div className="reveal mb-14 grid grid-cols-12 gap-8">
             <div className="col-span-12 md:col-span-4">
@@ -860,7 +865,8 @@ function Index() {
         </div>
       </section>
 
-      <section id="availability" className="relative py-24 md:py-32">
+      <section id="availability" className="relative overflow-hidden py-24 md:py-32">
+        <ContourField variant="quiet" seed={8} />
         <div className="mx-auto max-w-[1600px] px-8 md:px-14">
           <div className="reveal mb-14 max-w-2xl">
             <p className="eyebrow">Availability</p>
@@ -1098,13 +1104,6 @@ const editions = [
   { no: "N° 19", name: "The Summit Residence", orientation: "Level IX · Panoramic", area: "612 m²", qualifier: "ceremonial arrival", status: "By Invitation" },
 ];
 
-const materialMoments = [
-  { label: "Stone", copy: "Texture that receives daylight rather than merely reflecting it." },
-  { label: "Bronze", copy: "Warm detailing with a softened edge and measured glow." },
-  { label: "Glass", copy: "Reflections that shift with the visitor like moving water." },
-  { label: "Timber", copy: "Grain treated as quiet architecture, not decoration." },
-  { label: "Water", copy: "The final surface — alive, reflective, impossibly calm." },
-];
 
 const wellbeingSpaces = [
   { was: "Gym", name: "Movement Studio" },
