@@ -979,12 +979,91 @@ const chapters = [
   { id: "editions", label: "Editions" },
   { id: "residence", label: "Residence" },
   { id: "atmosphere", label: "Atmosphere" },
-  { id: "craft", label: "Invisible Luxury" },
+  { id: "craft", label: "Materials" },
+  { id: "gallery", label: "Gallery" },
   { id: "wellbeing", label: "Wellbeing" },
   { id: "estate", label: "Estate" },
   { id: "availability", label: "Availability" },
   { id: "reservation", label: "Reservation" },
 ];
+
+type Phase = {
+  index: string;
+  label: string;
+  subtitle: string;
+  copy: string;
+  current: boolean;
+  anchor: string | null;
+};
+
+const phases: Phase[] = [
+  {
+    index: "I",
+    label: "Arrival",
+    subtitle: "The first encounter",
+    copy:
+      "Recognition, proportion, and the ceremony of the threshold. The estate reveals itself long before the door.",
+    current: false,
+    anchor: "#collection",
+  },
+  {
+    index: "II",
+    label: "Belonging",
+    subtitle: "Now unfolding",
+    copy:
+      "Admiration becomes ownership without announcement. Life begins to arrange itself against the architecture.",
+    current: true,
+    anchor: "#belonging",
+  },
+  {
+    index: "III",
+    label: "Continuum",
+    subtitle: "In preparation",
+    copy:
+      "The residence at rest — how the estate ages, how it remembers its inhabitants, how it becomes a family object.",
+    current: false,
+    anchor: null,
+  },
+];
+
+const materialTiles = [
+  {
+    slug: "stone",
+    index: "Material N° 01",
+    label: "Stone",
+    tagline: "Cut from mountains that pre-date the ocean. Laid by hand, joint by joint.",
+    image: MEDIA.matStone,
+  },
+  {
+    slug: "timber",
+    index: "Material N° 02",
+    label: "Timber",
+    tagline: "Twelve species, ordered from lightest to deepest — each a private hour of the day.",
+    image: MEDIA.matTimber,
+  },
+  {
+    slug: "glass",
+    index: "Material N° 03",
+    label: "Glass",
+    tagline: "Hand-poured art glass held in a bronze lattice. Colour, written on the floor.",
+    image: MEDIA.matGlass,
+  },
+  {
+    slug: "bronze",
+    index: "Material N° 04",
+    label: "Bronze",
+    tagline: "The first material the hand meets — warmed by the palm before the door opens.",
+    image: MEDIA.matBronze,
+  },
+  {
+    slug: "water",
+    index: "Material N° 05",
+    label: "Water",
+    tagline: "The final surface — alive, reflective, the estate's mirror to itself.",
+    image: MEDIA.matWater,
+  },
+];
+
 
 const collectionCards = [
   {
