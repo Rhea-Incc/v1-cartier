@@ -220,7 +220,7 @@ function Parallax({ src, alt, className = "" }: { src: string; alt: string; clas
   );
 }
 
-function Nav() {
+function Nav({ onOpenPhases }: { onOpenPhases: () => void }) {
   const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
@@ -232,42 +232,163 @@ function Nav() {
 
   return (
     <header
-      className={`fixed inset-x-0 top-0 z-50 transition-all duration-700 ${scrolled ? "py-4 backdrop-blur-md" : "py-8"}`}
+      className={`fixed inset-x-0 top-0 z-50 transition-all duration-700 ${scrolled ? "py-3 backdrop-blur-md" : "py-6 md:py-8"}`}
       style={{
         background: scrolled
-          ? "linear-gradient(to bottom, oklch(0.1 0.012 250 / 0.65), transparent)"
+          ? "linear-gradient(to bottom, oklch(0.1 0.012 250 / 0.7), transparent)"
           : "transparent",
       }}
     >
-      <div className="mx-auto flex max-w-[1600px] items-center justify-between px-8 md:px-14">
-        <a href="#top" className="flex items-center gap-3" data-cursor>
-          <img src={MEDIA.logo} alt="" className="h-7 w-auto opacity-90" />
-          <img src={MEDIA.wordmark} alt="Cartier" className="h-3 w-auto opacity-90" />
+      <div className="mx-auto grid max-w-[1600px] grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] items-center gap-4 px-5 md:px-14">
+        <a href="#top" className="flex min-w-0 items-center gap-3" data-cursor>
+          <img src={MEDIA.logo} alt="" className="h-6 w-auto shrink-0 opacity-90 md:h-7" />
+          <img src={MEDIA.wordmark} alt="Cartier" className="hidden h-3 w-auto opacity-90 sm:block" />
         </a>
-        <nav className="hidden gap-12 md:flex">
-          {[
-            ["Belonging", "#belonging"],
-            ["Collection", "#collection"],
-            ["Residence", "#residence"],
-            ["Estate", "#estate"],
-            ["Reservation", "#reservation"],
-          ].map(([label, href]) => (
-            <a
-              key={href}
-              href={href}
-              className="eyebrow text-foreground/80 transition-colors duration-500 hover:text-[color:var(--gold)]"
-            >
-              {label}
-            </a>
-          ))}
-        </nav>
-        <a href="#reservation" className="eyebrow gold-underline hidden md:inline-block">
-          Private Viewing
-        </a>
+
+        {/* PHASES — the always-present, elegant entry into the journey */}
+        <button
+          type="button"
+          onClick={onOpenPhases}
+          data-cursor
+          aria-label="Open phases"
+          className="phase-marker group flex items-center gap-3 px-4 py-2 md:px-5 md:py-2.5"
+        >
+          <span className="flex flex-col items-start">
+            <span className="text-[9px] uppercase tracking-[0.32em] text-foreground/50">
+              Phase 02
+            </span>
+            <span className="font-display text-sm leading-none text-foreground/90 md:text-base">
+              Belonging
+            </span>
+          </span>
+          <span className="h-4 w-px bg-white/15" />
+          <span className="grid grid-cols-3 gap-[3px]" aria-hidden>
+            {[0, 1, 2].map((i) => (
+              <span
+                key={i}
+                className={`h-[3px] w-2 ${i === 1 ? "bg-[color:var(--gold)]" : "bg-white/25"}`}
+              />
+            ))}
+          </span>
+        </button>
+
+        <div className="flex items-center justify-end gap-6 md:gap-10">
+          <a href="#reservation" className="eyebrow gold-underline hidden md:inline-block">
+            Private Viewing
+          </a>
+        </div>
       </div>
     </header>
   );
 }
+
+function PhasesOverlay({ open, onClose }: { open: boolean; onClose: () => void }) {
+  useEffect(() => {
+    if (!open) return;
+    const onKey = (e: KeyboardEvent) => e.key === "Escape" && onClose();
+    document.body.style.overflow = "hidden";
+    window.addEventListener("keydown", onKey);
+    return () => {
+      document.body.style.overflow = "";
+      window.removeEventListener("keydown", onKey);
+    };
+  }, [open, onClose]);
+
+  const jump = (href: string) => () => {
+    onClose();
+    setTimeout(() => {
+      const id = href.replace("#", "");
+      const el = document.getElementById(id);
+      if (!el) return;
+      window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY - 24, behavior: "smooth" });
+    }, 320);
+  };
+
+  return (
+    <div
+      className={`phase-sheet fixed inset-0 z-[90] transition-all duration-700 ${
+        open ? "pointer-events-auto opacity-100" : "pointer-events-none opacity-0"
+      }`}
+      aria-hidden={!open}
+    >
+      <ContourField variant="quiet" />
+      <div className="relative flex h-full flex-col">
+        <div className="flex items-center justify-between px-5 py-6 md:px-14 md:py-8">
+          <img src={MEDIA.wordmark} alt="Cartier" className="h-3 opacity-70" />
+          <button
+            onClick={onClose}
+            className="eyebrow gold-underline"
+            data-cursor
+            aria-label="Close phases"
+          >
+            Close —
+          </button>
+        </div>
+
+        <div className="mx-auto flex w-full max-w-[1600px] flex-1 flex-col justify-center px-5 pb-16 md:px-14">
+          <p className="eyebrow mb-8">The journey, in three movements</p>
+          <ol className="divide-y divide-white/10 border-y border-white/10">
+            {phases.map((p) => {
+              const isActive = p.current;
+              const clickable = p.anchor;
+              const inner = (
+                <div className="grid grid-cols-12 items-baseline gap-4 py-8 md:py-10">
+                  <span className="col-span-3 font-display text-2xl text-[color:var(--gold)] md:col-span-2 md:text-3xl">
+                    {p.index}
+                  </span>
+                  <div className="col-span-9 md:col-span-5">
+                    <p className="font-display text-4xl leading-[0.98] md:text-6xl">
+                      {p.label}
+                    </p>
+                    <p className="mt-3 text-xs uppercase tracking-[0.3em] text-foreground/45">
+                      {p.subtitle}
+                    </p>
+                  </div>
+                  <p className="col-span-12 max-w-md text-sm leading-relaxed text-foreground/60 md:col-span-4 md:col-start-9">
+                    {p.copy}
+                  </p>
+                  <p className="col-span-12 mt-2 text-[10px] uppercase tracking-[0.3em] text-foreground/45 md:col-span-1 md:col-start-12 md:text-right">
+                    {isActive ? "Now unfolding" : clickable ? "Enter →" : "Forthcoming"}
+                  </p>
+                </div>
+              );
+              return (
+                <li key={p.label} className={isActive ? "text-foreground" : "text-foreground/85"}>
+                  {clickable ? (
+                    <button
+                      type="button"
+                      onClick={jump(p.anchor!)}
+                      className="block w-full text-left transition-colors duration-500 hover:text-[color:var(--gold)]"
+                      data-cursor
+                    >
+                      {inner}
+                    </button>
+                  ) : (
+                    <div className="opacity-60">{inner}</div>
+                  )}
+                </li>
+              );
+            })}
+          </ol>
+
+          <div className="mt-10 grid grid-cols-2 gap-x-8 gap-y-3 md:grid-cols-5">
+            {chapters.map((c) => (
+              <button
+                key={c.id}
+                type="button"
+                onClick={jump(`#${c.id}`)}
+                className="eyebrow text-left text-foreground/60 transition-colors hover:text-[color:var(--gold)]"
+              >
+                {c.label}
+              </button>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 
 function SceneChapters({ activeId }: { activeId: string }) {
   const activeIndex = Math.max(
