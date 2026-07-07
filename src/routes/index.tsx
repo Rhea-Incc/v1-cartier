@@ -671,33 +671,121 @@ function Index() {
         </div>
       </section>
 
-      <section id="craft" className="relative py-24 md:py-32">
-        <div className="mx-auto max-w-[1600px] px-8 md:px-14">
+      {/* Material palette — immersive, one continuous field */}
+      <section id="craft" className="relative overflow-hidden py-24 md:py-40">
+        <ContourField variant="quiet" seed={2} />
+        <div className="relative mx-auto max-w-[1600px] px-5 md:px-14">
           <div className="reveal grid grid-cols-12 gap-8">
-            <div className="col-span-12 md:col-span-4">
-              <p className="eyebrow">Invisible Luxury</p>
-              <h2 className="font-display mt-6 text-5xl leading-[1.02] md:text-6xl">
-                Precision, not ornament.
+            <div className="col-span-12 md:col-span-5">
+              <p className="eyebrow">The Material Palette</p>
+              <h2 className="font-display mt-6 text-5xl leading-[1.02] md:text-7xl">
+                Five materials,
+                <br />
+                one language.
               </h2>
             </div>
-            <div className="col-span-12 md:col-span-7 md:col-start-6">
-              <p className="max-w-2xl text-sm leading-relaxed text-foreground/68">
-                A bronze door handle warmed by the hand. Stone that holds yesterday's sun.
-                A shadow that arrives at four o'clock and stays for the length of a conversation.
+            <div className="col-span-12 md:col-span-6 md:col-start-7 md:pt-10">
+              <p className="max-w-xl text-sm leading-relaxed text-foreground/68">
+                A bronze door handle warmed by the hand. Stone that holds yesterday&rsquo;s
+                sun. Timber ordered from lightest to deepest. Coloured glass that writes
+                on the floor. Water that returns the sky. Each material has a place, an
+                hour, and a reason.
               </p>
             </div>
           </div>
 
-          <div className="mt-14 grid grid-cols-2 gap-4 md:grid-cols-5 md:gap-6">
-            {materialMoments.map((moment) => (
-              <div key={moment.label} className="reveal scene-panel p-6 md:p-8">
-                <p className="font-display text-2xl text-foreground/92 md:text-3xl">{moment.label}</p>
-                <p className="mt-3 text-sm leading-relaxed text-foreground/58">{moment.copy}</p>
-              </div>
-            ))}
+          <div className="mt-16 grid grid-cols-12 gap-3 md:gap-5">
+            {materialTiles.map((m, i) => {
+              // rhythm: 7/5, 5/7, 4/4/4 — asymmetric but composed
+              const span =
+                i === 0
+                  ? "col-span-12 md:col-span-7"
+                  : i === 1
+                    ? "col-span-12 md:col-span-5"
+                    : "col-span-12 md:col-span-4";
+              return (
+                <Link
+                  key={m.slug}
+                  to="/materials/$slug"
+                  params={{ slug: m.slug }}
+                  data-cursor
+                  className={`material-tile reveal group relative block aspect-[4/5] ${span}`}
+                >
+                  <img
+                    src={m.image}
+                    alt={m.label}
+                    loading="lazy"
+                    className="absolute inset-0 h-full w-full object-cover"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-black/10" />
+                  <div className="absolute inset-x-0 top-0 flex items-center justify-between p-5 md:p-8">
+                    <p className="eyebrow text-foreground/70">{m.index}</p>
+                    <span className="eyebrow text-foreground/70 transition-colors group-hover:text-[color:var(--gold)]">
+                      Enter →
+                    </span>
+                  </div>
+                  <div className="absolute inset-x-0 bottom-0 p-5 md:p-8">
+                    <h3 className="font-display text-5xl leading-none md:text-6xl">
+                      {m.label}
+                    </h3>
+                    <p className="mt-4 max-w-md text-sm leading-relaxed text-foreground/75">
+                      {m.tagline}
+                    </p>
+                  </div>
+                </Link>
+              );
+            })}
           </div>
         </div>
       </section>
+
+      {/* Gallery — the estate breathes */}
+      <section id="gallery" className="relative overflow-hidden py-24 md:py-32">
+        <ContourField variant="quiet" seed={5} />
+        <div className="relative mx-auto max-w-[1600px] px-5 md:px-14">
+          <div className="reveal mb-12 grid grid-cols-12 gap-8">
+            <div className="col-span-12 md:col-span-5">
+              <p className="eyebrow">Gallery</p>
+              <h2 className="font-display mt-6 text-5xl leading-[1.02] md:text-6xl">
+                Hours of the day.
+              </h2>
+            </div>
+            <p className="col-span-12 max-w-lg text-sm leading-relaxed text-foreground/68 md:col-span-6 md:col-start-7">
+              Twilight arrives from the sea. The tower lights, one floor at a time.
+              The pool becomes a corridor. The evening settles in.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-12 gap-3 md:gap-5">
+            <div className="reveal col-span-12 md:col-span-8">
+              <Parallax src={MEDIA.poolSunset} alt="Cartier terrace and pool at sunset" className="aspect-[16/10]" />
+            </div>
+            <div className="reveal col-span-12 md:col-span-4">
+              <Parallax src={MEDIA.estateBalcony} alt="Balcony overlooking the estate at dusk" className="aspect-[3/4]" />
+            </div>
+            <div className="reveal col-span-12 md:col-span-5">
+              <Parallax src={MEDIA.towerNight} alt="Cartier tower illuminated at night" className="aspect-[4/5]" />
+            </div>
+            <div className="reveal col-span-12 md:col-span-7">
+              <Parallax src={MEDIA.poolTwilight} alt="Pool terrace at twilight" className="aspect-[4/3]" />
+            </div>
+          </div>
+
+          {/* Second video — silent, ambient, deployable */}
+          <div className="reveal mt-10 overflow-hidden">
+            <video
+              src={MEDIA.vid2}
+              autoPlay
+              muted
+              loop
+              playsInline
+              preload="metadata"
+              className="aspect-[16/8] w-full object-cover"
+            />
+          </div>
+        </div>
+      </section>
+
 
       <section id="wellbeing" className="relative py-24 md:py-32">
         <div className="mx-auto max-w-[1600px] px-8 md:px-14">
